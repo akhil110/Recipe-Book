@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html ng-app="RecipeBook">
+  <head>
+    <meta charset="utf-8">
+    <title>Recipe Book</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+    <link data-require="ionic@1.0.0-beta.1" data-semver="1.0.0-beta.1" rel="stylesheet" href="http://code.ionicframework.com/1.0.0-beta.13/css/ionic.css" />
+    <script data-require="ionic@1.0.0-beta.1" data-semver="1.0.0-beta.1" src="http://code.ionicframework.com/1.0.0-beta.13/js/ionic.bundle.js"></script>
+      
+      <script src="app.js"></script>
+    <script src="recipe-service.js"></script>
+  </head>
+  
+  <body ng-controller="MainCtrl">
+
+<ion-nav-view></ion-nav-view>
+
+<script id="event-menu.html" type="text/ng-template">
+    <ion-side-menus>
+
+        <ion-side-menu-content>
+            <ion-nav-bar class="bar-positive"animation="no-animation"></ion-nav-bar>
+            <ion-nav-buttons side="left">
+                <button class="button button-icon button-clear ion-navicon" ng-click="toggleLeft()"></button>
+            </ion-nav-buttons>
+            <ion-nav-view animation="no-animation" name="menuContent"></ion-nav-view>
+        </ion-side-menu-content>
+
+        <ion-side-menu side="left">
+            <ion-header-bar class="bar-calm">
+                <h1 class="title">Menu</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ul class="list">
+                    <!-- Note each link has the 'menu-close' attribute so the menu auto closes when clicking on one of these links -->
+                    <a href="#/recipeURL/all-recipe" class="item" menu-close>All Recipe</a>
+                    <a href="#/recipeURL/add-recipe" class="item" menu-close>Add Recipe</a>
+                    <a href="#/recipeURL/about" class="item" menu-close>About</a>
+                </ul>
+            </ion-content>
+        </ion-side-menu>
+
+    </ion-side-menus>
+</script>
+
+<script id="home.html" type="text/ng-template">
+    <ion-view title="Recipe Book">
+        <ion-content>
+            <div class="list card" ng-repeat="r in recipe">
+                <div class="item item-divider">
+                    {{ headertxt }}
+                </div>
+                <div class="item">
+                    <h2 class="assertive">{{ r.recipe_name }}</h2>
+                    <p><b>Category:</b> {{ r.recipe_category }}</p>
+                </div>
+
+                <div class="item item-body">
+                    <p>
+                        <b>Instruction:</b><br><br>
+                        <span style="white-space: pre;">{{ r.recipe_instructions }}</span>
+                    </p>
+                 </div>
+            </div>
+        </ion-content>
+
+        </ion-footer-bar>
+    </ion-view>
+</script>
+
+<script id="all-recipe.html" type="text/ng-template">
+    <ion-view title="List Recipe">
+        <ion-content>
+
+            <div class="list">
+                    <div class="item item-input-inset">
+                        <label class="item-input-wrapper">
+                            <input type="text" placeholder="Search recipe" maxlength="50" ng-model="searchRecipe.recipe_name">
+                        </label>
+                    </div>
+            </div>
+
+            <ion-list>
+                <ion-item href="#/recipeURL/recipe-detail/{{ r.id }}" ng-repeat="r in recipe | filter:searchRecipe" item="r">
+                    <h2 class="assertive">{{r.recipe_name}}</h2>
+                    <h3 class="royal">{{r.recipe_category}}</h3>
+                    <ion-option-button class="icon-left ion-edit button-positive" ng-click="editRecipe(r.id)">
+                        Edit
+                    </ion-option-button>
+                    <ion-option-button class="icon-left ion-trash-a button-assertive"  ng-click="delRecipe(r.id)">
+                        Delete
+                    </ion-option-button>
+                </ion-item>
+            </ion-list>
+
+        </ion-content>
+    </ion-view>
+</script>
+
+<script id="add-recipe.html" type="text/ng-template">
+    <ion-view title="{{ action }} Recipe">
+        <ion-content>
+            <form ng-submit="saveRecipe(recipe)">
+                <div class="list list-inset">
+                    <label class="item item-input">
+                        <span class="input-label">Recipe Name</span>
+                        <input type="text" placeholder="Enter Recipe" maxlength="150" ng-model="recipe.name">
+                    </label>
+                    <label class="item item-input item-select">
+                        <div class="input-label">
+                            Category
+                        </div>
+                        <select ng-model="recipe.category">
+                            <option value="" ng-selected="recipe.category==''">Select</option>
+                            <option value="Soups" ng-selected="recipe.category=='Soups'">Soups</option>
+                            <option value="Starters" ng-selected="recipe.category=='Starters'">Starters</option>
+                            <option value="Main Dish" ng-selected="recipe.category=='Main Dish'">Main Dish</option>
+                            <option value="Appetizers" ng-selected="recipe.category=='Appetizers'">Appetizers</option>
+                            <option value="Desserts" ng-selected="recipe.category=='Desserts'">Desserts</option>
+                        </select>
+                    </label>
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Instructions</span>
+                        <textarea placeholder="Instructions" name="pageTextInput" maxlength="500" rows="4" cols="10" ng-model="recipe.instructions"></textarea>
+                    </label>
+
+                    <button type="submit" class="button button-block button-positive">
+                        {{ btnaction }}
+                    </button>
+                    <br><br>
+                </div>
+            </form>
+        </ion-content>
+    </ion-view>
+</script>
+
+<script id="about.html" type="text/ng-template">
+    <ion-view title="About">
+        <ion-content>
+            <div style="padding-top: 100px; text-align: center">
+                <h1>Recipe Book</h1>
+                <h4>Version 1.0</h4>
+            </div>
+        </ion-content>
+    </ion-view>
+</script>
+
+</body>
+</html>
